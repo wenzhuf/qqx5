@@ -90,7 +90,6 @@ def refresh_cookies(qm_keyst: str, uin, sign: str) -> None:
             }
         }
     }
-    print(json.dumps(data,separators=(',', ':')))
     # 2. Prepare requests
     base = "https://u6.y.qq.com/cgi-bin/musics.fcg"
     params = {
@@ -122,4 +121,4 @@ if __name__ == "__main__":
     with open(".cookie", "w") as f:
         f.write(new_key)
     
-    claim_points(new_key)
+    claim_points(new_key, uin=args.uin)
