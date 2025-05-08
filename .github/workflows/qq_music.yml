@@ -20,6 +20,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.x
+      
+      - name: Install Python dependencies
+        run: |
+          pip install requests
+
 
       - name: Restore cookie
         id: cache-restore
