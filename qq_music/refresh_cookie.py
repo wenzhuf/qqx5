@@ -1,7 +1,8 @@
 import argparse
 import json
 import requests
-from typing import Any
+
+from qqx5.util.bark import send_bark_notification
 
 def print_response(response: requests.Response) -> None:
     """Prints the response status and content in a readable format."""
@@ -76,7 +77,9 @@ def claim_points(key, uin) -> None:
     else:
         reward_points = result["req_0"]["data"]["Total"]
         msg = result["req_0"]["data"]["Msg"] or "N/A"
-        print(f"签到成功, 获得 {reward_points} 积分。消息：{msg}")
+        push_msg = f"签到成功, 获得 {reward_points} 积分。消息：{msg}"
+        print(push_msg)
+        send_bark_notification(title='QQMusic', body=push_msg, group_name='QQMusic')
 
 def refresh_cookies(qm_keyst: str, uin, sign: str) -> None:
     # 1. Prepare request data
@@ -116,9 +119,15 @@ if __name__ == "__main__":
     parser.add_argument("--sign", required=True, help="sign")
     args = parser.parse_args()
 
-    new_key = refresh_cookies(args.key, args.uin, args.sign)
-    
-    with open(".cookie", "w") as f:
-        f.write(new_key)
-    
-    claim_points(new_key, uin=args.uin)
+    try:
+        new_key = refresh_cookies(args.key, args.uin, args.sign)
+        
+        with open(".cookie", "w") as f:
+            f.write(new_key)
+        
+        claim_points(new_key, uin=args.uin)
+    except Exception as e:
+        err_msg = str(e)
+        print(f"Error occurred: {err_msg}")
+        send_bark_notification(title='QQMusic', body=f'签到失败。\nError occurred: {err_msg}', group_name='QQMusic')
+        raise
