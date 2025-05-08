@@ -51,6 +51,10 @@ jobs:
             echo "musickey=${{ secrets.MUSIC_KEY }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Mask environment
+        run: |
+          echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
+
       - name: Get signature
         id: sign_step
         run: |
@@ -58,8 +62,6 @@ jobs:
           echo "::add-mask::${{ secrets.QQ }}"
           
           node qq_music/sign.js
-          
-          echo "::add-mask::${{ steps.sign_step.outputs.sign }}"
         env:
           GITHUB_OUTPUT: $GITHUB_OUTPUT
           MUSIC_KEY: ${{ steps.read_cookie.outputs.musickey }}
