@@ -1,0 +1,61 @@
+name: Refresh Cookie Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  refresh-cookie:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Restore cookie
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .cookie
+          key: cookie-cache-${{ runner.os }}
+          restore-keys: |
+            cookie-cache-
+
+      - name: Read musickey from cookie
+        id: read_cookie
+        run: |
+          if [ -f .cookie ] && [ -s .cookie ]; then
+            echo "Using cached cookie:"
+            cat .cookie
+            echo "musickey=$(cat .cookie)" >> $GITHUB_OUTPUT
+          else
+            echo "Cache miss or empty .cookie, using fallback secret"
+            echo "${{ secrets.MUSIC_KEY }}" > .cookie
+            echo "musickey=${{ secrets.MUSIC_KEY }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get signature
+        id: sign_step
+        run: |
+          node qq_music/sign.js "{\"req1\":{\"module\":\"QQConnectLogin.LoginServer\",\"method\":\"QQLogin\",\"param\":{\"musicid\":${{ secrets.QQ }},\"musickey\":\"${{ steps.read_cookie.outputs.musickey }}\"}}}"
+        env:
+          GITHUB_OUTPUT: $GITHUB_OUTPUT
+
+      - name: Run Python script to refresh cookie
+        run: |
+          python refresh_cookie.py --key="${{ steps.read_cookie.outputs.musickey }}" --uin="${{ secrets.QQ }}" --sign="${{ steps.sign_step.outputs.sign }}"
+
+      - name: Save cookie
+        uses: actions/cache/save@v4
+        with:
+          path: .cookie
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
