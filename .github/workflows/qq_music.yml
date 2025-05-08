@@ -36,7 +36,7 @@ jobs:
           path: .cookie
           key: cookie-cache-${{ runner.os }}
           restore-keys: |
-            cookie-cache-
+            cookie-cache-${{ runner.os }}
 
       - name: Read musickey from cookie
         id: read_cookie
@@ -72,11 +72,7 @@ jobs:
           echo "::add-mask::${{ secrets.QQ }}"
           echo "::add-mask::${{ steps.sign_step.outputs.sign }}"
 
-          echo "KEY=${{ steps.read_cookie.outputs.musickey }}" >> $GITHUB_ENV
-          echo "UIN=${{ secrets.QQ }}" >> $GITHUB_ENV
-          echo "SIGN=${{ steps.sign_step.outputs.sign }}" >> $GITHUB_ENV
-
-          python -m qq_music.refresh_cookie --key="$KEY" --uin="$UIN" --sign="$SIGN"
+          python -m qq_music.refresh_cookie --key="${{ steps.read_cookie.outputs.musickey }}" --uin="${{ secrets.QQ }}" --sign="${{ steps.sign_step.outputs.sign }}"
 
       - name: Save cookie
         uses: actions/cache/save@v4
