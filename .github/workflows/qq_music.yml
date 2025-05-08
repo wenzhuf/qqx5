@@ -42,8 +42,7 @@ jobs:
         id: read_cookie
         run: |
           if [ -f .cookie ] && [ -s .cookie ]; then
-            echo "Using cached cookie:"
-            cat .cookie
+            echo "Using cached cookie"
             echo "musickey=$(cat .cookie)" >> $GITHUB_OUTPUT
           else
             echo "Cache miss or empty .cookie, using fallback secret"
@@ -51,9 +50,9 @@ jobs:
             echo "musickey=${{ secrets.MUSIC_KEY }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Mask environment
+      - name: Prepare to run
         run: |
-          echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
+          echo "准备开始执行"
 
       - name: Get signature
         id: sign_step
