@@ -64,7 +64,7 @@ def claim_points(key, uin) -> None:
         '"req_0":{'
         '"module":"music.lvz.MuFest13TaskSvr",'
         '"method":"EveryDaySignLvzScore",'
-        '"param":{"Uin":"' + uin +'","Cmd":"get"}'
+        '"param":{"Uin":"' + str(uin) +'","Cmd":"get"}'
         '}}'
     )
     response = requests.post(url, headers=headers, data=raw_data)
