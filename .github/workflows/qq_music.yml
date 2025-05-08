@@ -57,13 +57,12 @@ jobs:
           set +x
           echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
           echo "::add-mask::${{ secrets.QQ }}"
-
-          echo "MUSIC_KEY=${{ steps.read_cookie.outputs.musickey }}" >> $GITHUB_ENV
-          echo "MUSIC_ID=${{ secrets.QQ }}" >> $GITHUB_ENV
           
           node qq_music/sign.js
         env:
           GITHUB_OUTPUT: $GITHUB_OUTPUT
+          MUSIC_KEY: ${{ steps.read_cookie.outputs.musickey }}
+          MUSIC_ID: ${{ secrets.QQ }}
 
 
       - name: Run Python script to refresh cookie
@@ -73,6 +72,11 @@ jobs:
           echo "::add-mask::${{ steps.sign_step.outputs.sign }}"
 
           python -m qq_music.refresh_cookie --key="${{ steps.read_cookie.outputs.musickey }}" --uin="${{ secrets.QQ }}" --sign="${{ steps.sign_step.outputs.sign }}"
+        env:
+          BARK_DEVICE_KEY: ${{ secrets.BARK_DEVICE_KEY }}
+          UIN: ${{ secrets.QQ }}
+          SIGN: ${{ steps.sign_step.outputs.sign }}
+          MUSIC_KEY: ${{ steps.read_cookie.outputs.musickey }}
 
       - name: Save cookie
         uses: actions/cache/save@v4
