@@ -90,6 +90,7 @@ def refresh_cookies(qm_keyst: str, uin, sign: str) -> None:
             }
         }
     }
+    print(json.dumps(data,separators=(',', ':')))
     # 2. Prepare requests
     base = "https://u6.y.qq.com/cgi-bin/musics.fcg"
     params = {

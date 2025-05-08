@@ -54,16 +54,7 @@ jobs:
           echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
           echo "::add-mask::${{ secrets.QQ }}"
 
-          MUSIC_KEY="${{ steps.read_cookie.outputs.musickey }}"
-          MUSIC_ID="${{ secrets.QQ }}"
-
-          JSON_PAYLOAD=$(jq -n \
-            --arg musickey "$MUSIC_KEY" \
-            --argjson musicid "$MUSIC_ID" \
-            '{req1: {module: "QQConnectLogin.LoginServer", method: "QQLogin", param: {musicid: $musicid, musickey: $musickey}}}')
-
-          echo "Prepared JSON: $JSON_PAYLOAD"
-          node qq_music/sign.js "$JSON_PAYLOAD"
+          node qq_music/sign.js "{\"req1\":{\"module\":\"QQConnectLogin.LoginServer\",\"method\":\"QQLogin\",\"param\":{\"musicid\":${{ secrets.QQ }},\"musickey\":\"${{ steps.read_cookie.outputs.musickey }}\"}}}"
         env:
           GITHUB_OUTPUT: $GITHUB_OUTPUT
 
