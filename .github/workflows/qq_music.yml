@@ -43,16 +43,14 @@ jobs:
         run: |
           if [ -f .cookie ] && [ -s .cookie ]; then
             echo "Using cached cookie"
-            echo "musickey=$(cat .cookie)" >> $GITHUB_OUTPUT
+            music_key=$(cat .cookie)
+            echo "::add-mask::$music_key"
+            echo "musickey=$music_key" >> $GITHUB_OUTPUT
           else
             echo "Cache miss or empty .cookie, using fallback secret"
             echo "${{ secrets.MUSIC_KEY }}" > .cookie
             echo "musickey=${{ secrets.MUSIC_KEY }}" >> $GITHUB_OUTPUT
           fi
-
-      - name: Prepare to run
-        run: |
-          echo "准备开始执行"
 
       - name: Get signature
         id: sign_step
