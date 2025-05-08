@@ -72,7 +72,7 @@ jobs:
           export UIN="${{ secrets.QQ }}"
           export SIGN="${{ steps.sign_step.outputs.sign }}"
 
-          python qq_music/refresh_cookie.py --key="$KEY" --uin="$UIN" --sign="$SIGN"
+          python -m qq_music.refresh_cookie --key="$KEY" --uin="$UIN" --sign="$SIGN"
 
       - name: Save cookie
         uses: actions/cache/save@v4

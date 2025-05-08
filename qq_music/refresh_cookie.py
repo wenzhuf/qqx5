@@ -2,7 +2,7 @@ import argparse
 import json
 import requests
 
-from qqx5.util.bark import send_bark_notification
+from util.bark import send_bark_notification
 
 def print_response(response: requests.Response) -> None:
     """Prints the response status and content in a readable format."""
