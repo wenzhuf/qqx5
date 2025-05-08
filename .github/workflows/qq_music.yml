@@ -46,13 +46,34 @@ jobs:
       - name: Get signature
         id: sign_step
         run: |
-          node qq_music/sign.js "{\"req1\":{\"module\":\"QQConnectLogin.LoginServer\",\"method\":\"QQLogin\",\"param\":{\"musicid\":${{ secrets.QQ }},\"musickey\":\"${{ steps.read_cookie.outputs.musickey }}\"}}}"
+          echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
+          echo "::add-mask::${{ secrets.QQ }}"
+
+          MUSIC_KEY="${{ steps.read_cookie.outputs.musickey }}"
+          MUSIC_ID="${{ secrets.QQ }}"
+
+          JSON_PAYLOAD=$(jq -n \
+            --arg musickey "$MUSIC_KEY" \
+            --argjson musicid "$MUSIC_ID" \
+            '{req1: {module: "QQConnectLogin.LoginServer", method: "QQLogin", param: {musicid: $musicid, musickey: $musickey}}}')
+
+          echo "Prepared JSON: $JSON_PAYLOAD"
+          node qq_music/sign.js "$JSON_PAYLOAD"
         env:
           GITHUB_OUTPUT: $GITHUB_OUTPUT
 
+
       - name: Run Python script to refresh cookie
         run: |
-          python refresh_cookie.py --key="${{ steps.read_cookie.outputs.musickey }}" --uin="${{ secrets.QQ }}" --sign="${{ steps.sign_step.outputs.sign }}"
+          echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
+          echo "::add-mask::${{ secrets.QQ }}"
+          echo "::add-mask::${{ steps.sign_step.outputs.sign }}"
+
+          export KEY="${{ steps.read_cookie.outputs.musickey }}"
+          export UIN="${{ secrets.QQ }}"
+          export SIGN="${{ steps.sign_step.outputs.sign }}"
+
+          python qq_music/refresh_cookie.py --key="$KEY" --uin="$UIN" --sign="$SIGN"
 
       - name: Save cookie
         uses: actions/cache/save@v4
