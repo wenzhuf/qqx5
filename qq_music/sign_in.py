@@ -10,8 +10,8 @@ def current_millis_str() -> str:
     ms = int(time.time() * 1000)
     return str(ms).zfill(13)
 
-MUSIC_KEY = os.getenv("MUSIC_KEY", "Q_H_L_63k3NbwKxUwyqIqv4cgHje5HEt8Ei-_foO-gVc6UFa-QVYnkuIPPDl4XV3ob-3ZOa-JBKfUXJ7G2MpRmO_YJFeUCLV5IRvJXrIVBM92X8qNHa7_KER1sgaKr3JE4wtL5RTfanbCWNNbAK-2fHTfhhNQ")
-MUSIC_UIN = os.getenv("MUSIC_UIN", 635344130)
+MUSIC_KEY = os.getenv("MUSIC_KEY")
+MUSIC_UIN = os.getenv("MUSIC_UIN")
 headers = {
     "Host": "u6.y.qq.com",
     "Cookie": f"qm_keyst={MUSIC_KEY}; uin=o0{str(MUSIC_UIN)}",
