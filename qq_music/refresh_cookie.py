@@ -79,7 +79,7 @@ def claim_points(key, uin) -> None:
         msg = result["req_0"]["data"]["Msg"] or "N/A"
         push_msg = f"签到成功, 获得 {reward_points} 积分。消息：{msg}"
         print(push_msg)
-        send_bark_notification(title='QQMusic', body=push_msg, group_name='QQMusic')
+        send_bark_notification(title='QQMusic Claim Rewards', body=push_msg, group_name='QQMusic')
 
 def refresh_cookies(qm_keyst: str, uin, sign: str) -> None:
     # 1. Prepare request data

@@ -52,7 +52,7 @@ def sign_in(task_id):
     response.raise_for_status()
     response_json = response.json()
     print(f"Response：{response_json}")
-    send_bark_notification(title='QQMusic', body=f'每日签到Response。\n{response_json}', group_name='QQMusic')
+    send_bark_notification(title='QQMusic Daily Signin', body=f'{response_json["req_0"]["data"]["retMsg"]}', group_name='QQMusic')
 
 pending_tasks = get_task()
 for task_id in pending_tasks:
