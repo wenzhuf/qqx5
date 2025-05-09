@@ -65,7 +65,7 @@ jobs:
           MUSIC_ID: ${{ secrets.QQ }}
 
 
-      - name: Run Python script to refresh cookie
+      - name: Run Python script to daily claim rewards
         run: |
           echo "::add-mask::${{ steps.read_cookie.outputs.musickey }}"
           echo "::add-mask::${{ secrets.QQ }}"
@@ -76,6 +76,14 @@ jobs:
           BARK_DEVICE_KEY: ${{ secrets.BARK_DEVICE_KEY }}
           UIN: ${{ secrets.QQ }}
           SIGN: ${{ steps.sign_step.outputs.sign }}
+          MUSIC_KEY: ${{ steps.read_cookie.outputs.musickey }}
+
+      - name: Run Python script to daily sign-in
+        run: |
+          python -m qq_music.sign_in
+        env:
+          BARK_DEVICE_KEY: ${{ secrets.BARK_DEVICE_KEY }}
+          MUSIC_UIN: ${{ secrets.QQ }}
           MUSIC_KEY: ${{ steps.read_cookie.outputs.musickey }}
 
       - name: Save cookie
