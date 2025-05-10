@@ -68,7 +68,7 @@ def sign_in():
     response_json = response.json()
     print(f"Response：{response_json}")
     if response_json.get("req_0", {}).get("data", {}).get("Info").get("IsSignIn") == 1:
-        send_bark_notification(title='QQMusic Daily Signin', body=f'Successfully Signin! Monly Signin Count:{response_json["req_0"]["data"]["Info"]["MonthSignInCount"]} Days', group_name='QQMusic')
+        send_bark_notification(title='QQMusic Daily Signin', body=f'Successfully Signin! Monthly Signin Count:{response_json["req_0"]["data"]["Info"]["MonthSignInCount"]} Days', group_name='QQMusic')
 
 sign_in()
 today_task_id = get_task()
