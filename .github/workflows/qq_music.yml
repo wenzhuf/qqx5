@@ -3,7 +3,7 @@ name: Daily Claim Rewards - QQ Music
 on:
   schedule:
     # Run every day at midnight UTC
-    - cron: "0 0 * * *"  # The schedule here is UTC, adjust to your desired time if necessary
+    - cron: "11 21 * * *"  # The schedule here is UTC, adjust to your desired time if necessary
   workflow_dispatch:  # Allows manual trigger from the GitHub UI
 
 jobs:
